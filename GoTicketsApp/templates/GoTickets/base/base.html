@@ -15,7 +15,14 @@
 
     </head>
     <body>
+        <nav>
+            {% if user.is_authenticated %}
+                 <span>Welcome, {{request.user}}</span> <br>
+            {% endif%}
+        </nav>
+
         {% block content %}
+
         {% endblock %}
     </body>
 </html>
