@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import CreateUserForm
 
@@ -30,3 +30,7 @@ def user_login(request):
         else:
             messages.error(request, 'Invalid username or password')
     return render(request, 'GoTickets/login.html')
+
+def logoutUser(request):
+    logout(request)
+    return redirect('login')

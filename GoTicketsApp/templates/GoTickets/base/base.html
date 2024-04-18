@@ -17,8 +17,15 @@
     <body>
         <nav>
             {% if user.is_authenticated %}
-                 <span>Welcome, {{request.user}}</span> <br>
-            {% endif%}
+                <span>Welcome, {{ request.user }}</span> <br>
+                    <a href="{% url 'logout' %}" class="nav-link link-dark">
+                        <i class=""></i> Logout
+                    </a>
+            {% else %}
+                <span>Welcome, Guest</span> <br>
+            {% endif %}
+
+
         </nav>
 
         {% block content %}
