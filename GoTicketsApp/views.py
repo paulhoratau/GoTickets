@@ -1,11 +1,21 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import CreateUserForm
+from .forms import CreateUserForm, EventForm
 
 # Create your views here.
 def index(request):
     return render(request, 'GoTickets/index.html')
+
+def eventcreate(request):
+    if request.method == "POST":
+        form = EventForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+    else:
+        form = EventForm()
+    return render(request, 'GoTickets/eventcreate.html', {'form': form})
+
 
 def register(request):
     form = CreateUserForm()
