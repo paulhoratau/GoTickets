@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import CreateUserForm, EventForm
-
+from .models import Event
 # Create your views here.
 def index(request):
     return render(request, 'GoTickets/index.html')
@@ -15,6 +15,13 @@ def eventcreate(request):
     else:
         form = EventForm()
     return render(request, 'GoTickets/eventcreate.html', {'form': form})
+
+def events(request):
+    events = Event.objects.all()
+    context = {
+        'events': events
+    }
+    return render(request, 'GoTickets/events.html', context)
 
 
 def register(request):
