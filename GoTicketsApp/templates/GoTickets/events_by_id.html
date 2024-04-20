@@ -1,0 +1,14 @@
+{% extends 'GoTickets/base/base.html' %}
+
+{% block content %}
+<td class="event-title">{{ event.title }}</td>
+<td class="event-organizer">{{ event.organizer }}</td>
+<td class="event-description">{{ event.description }}</td>
+<td class="event-location">{{ event.location }}</td>
+<td class="event-start-date">{{ event.start_date }}</td>
+<td class="event-end-date">{{ event.end_date }}</td>
+<td class="event-image">
+    <img src="{{ event.image }}" alt="Image for {{ event.title }}" />
+</td>
+
+{% endblock %}

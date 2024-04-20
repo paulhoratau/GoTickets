@@ -10,6 +10,7 @@ urlpatterns = [
     path('logout/', views.logoutUser, name="logout" ),
 
     path('event/create/', views.eventcreate, name='eventcreate'),
-    path('events', views.events, name='events'),
+    path('events/', views.events, name='events'),
+    path('events/<int:id>/', views.events_by_id, name="events_by_id"),
 
 ]

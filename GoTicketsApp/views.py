@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import CreateUserForm, EventForm
@@ -22,6 +22,10 @@ def events(request):
         'events': events
     }
     return render(request, 'GoTickets/events.html', context)
+
+def events_by_id(request, id):
+    event = get_object_or_404(Event, pk=id)
+    return render(request, 'GoTickets/events_by_id.html', {'event': event})
 
 
 def register(request):
