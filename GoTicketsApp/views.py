@@ -1,8 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import CreateUserForm, EventForm
-from .models import Event
+from .forms import CreateUserForm, EventForm, UpdateEventForm
+from .models import Event, User
+
+
+
+
 # Create your views here.
 def index(request):
     return render(request, 'GoTickets/index.html')
@@ -12,9 +16,23 @@ def eventcreate(request):
         form = EventForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
+            return redirect('events')
     else:
         form = EventForm()
     return render(request, 'GoTickets/eventcreate.html', {'form': form})
+
+def event_manage(request, id):  # Added 'id' as a parameter
+    event = get_object_or_404(Event, id=id)
+    if request.method == 'POST':
+        form = UpdateEventForm(request.POST, instance=event)
+        if form.is_valid():
+            form.save()
+            return redirect('events')
+        else:
+            print(form.errors)  # Log or print form errors to debug
+    else:
+        form = UpdateEventForm(instance=event)
+    return render(request, 'GoTickets/event_manage.html', {'form': form})
 
 def events(request):
     events = Event.objects.all()
