@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import CreateUserForm, EventForm, UpdateEventForm
-from .models import Event, User
+from .models import Event, User, CartItem, Cart
 
 
 
@@ -73,3 +73,44 @@ def user_login(request):
 def logoutUser(request):
     logout(request)
     return redirect('login')
+
+def order_confirmation(request):
+    orders = Event.objects.all()
+    context = {
+        'orders': orders
+    }
+    return render(request, 'GoTickets/order_confirmation.html', context)
+
+def cart_detail(request):
+    cart_id = request.session.get("cart_id", None)
+    if cart_id:
+        cart = Cart.objects.get(id=cart_id)
+    else:
+        cart = Cart()
+        cart.save()
+        request.session['cart_id'] = cart.id
+    return render(request, 'GoTickets/cart_detail.html', {'cart': cart})
+
+def add_to_cart(request, event_id):
+    event = Event.objects.get(id=event_id)
+    cart_id = request.session.get("cart_id", None)
+    cart, created = Cart.objects.get_or_create(id=cart_id)
+    if created:
+        request.session['cart_id'] = cart.id
+    item, created = CartItem.objects.get_or_create(ticket=event, defaults={'quantity': 1})
+    if not created:
+        item.quantity += 1
+        item.save()
+    cart.items.add(item)
+    cart.total += item.quantity * event.price
+    cart.save()
+    return redirect('cart_detail')
+
+def remove_from_cart(request, item_id):
+    item = CartItem.objects.get(id=item_id)
+    cart = Cart.objects.get(id=request.session.get("cart_id"))
+    cart.total -= item.ticket.price * item.quantity
+    cart.items.remove(item)
+    item.delete()
+    cart.save()
+    return redirect('cart_detail')

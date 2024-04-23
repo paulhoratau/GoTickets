@@ -1,14 +1,22 @@
 {% extends 'GoTickets/base/base.html' %}
 
 {% block content %}
-<td class="event-title">{{ event.title }}</td>
-<td class="event-organizer">{{ event.organizer }}</td>
-<td class="event-description">{{ event.description }}</td>
-<td class="event-location">{{ event.location }}</td>
-<td class="event-start-date">{{ event.start_date }}</td>
-<td class="event-end-date">{{ event.end_date }}</td>
-<td class="event-image">
-    <img src="{{ event.image }}" alt="Image for {{ event.title }}" />
-</td>
+<!-- GoTickets/events_by_id.html -->
+<div class="event-detail">
+    <h1>{{ event.title }}</h1>
+    <img src="{{ event.image.url }}" alt="{{ event.title }}" style="width:100%;max-width:300px;">
+    <p>{{ event.description }}</p>
+    <p>Location: {{ event.location }}</p>
+    <p>Date: {{ event.start_date }} to {{ event.end_date }}</p>
+    <p>Price: ${{ event.price }}</p>
+
+    <!-- Add to Cart Form -->
+    <form action="{% url 'add_to_cart' event.id %}" method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary">Add to Cart</button>
+    </form>
+  </div>
+
+
 
 {% endblock %}

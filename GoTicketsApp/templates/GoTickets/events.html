@@ -1,34 +1,40 @@
+
 {% extends 'GoTickets/base/base.html' %}
+{% load static %}
+
 
 {% block content %}
-<table>
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Organizer</th>
-            <th>Description</th>
-            <th>Location</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Image</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for event in events %}
-        <tr>
-            <td><a href="/events/{{event.id}}">{{event.id}}</td>
-            <td class="event-title">{{ event.title }}</td>
-            <td class="event-organizer">{{ event.organizer }}</td>
-            <td class="event-description">{{ event.description }}</td>
-            <td class="event-location">{{ event.location }}</td>
-            <td class="event-start-date">{{ event.start_date }}</td>
-            <td class="event-end-date">{{ event.end_date }}</td>
-            <td class="event-image">
-                <img src="{{ event.image }}" alt="Image for {{ event.title }}" />
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="event-table-container">
+    <table class="event-table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Organizer</th>
+                <th>Description</th>
+                <th>Location</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Price</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+            <tr>
+                <td><a href="/events/{{ event.id }}">{{ event.title }}</a></td>
+                <td>{{ event.organizer }}</td>
+                <td>{{ event.description }}</td>
+                <td>{{ event.location }}</td>
+                <td>{{ event.start_date | date:"Y-m-d" }}</td>
+                <td>{{ event.end_date | date:"Y-m-d" }}</td>
+                <td>${{ event.price | floatformat:2 }}</td>
+                <td>
+                    <img src="{{ event.image }}" alt="Image of {{ event.title }}" class="event-image">
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 {% endblock %}
