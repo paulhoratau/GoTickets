@@ -1,0 +1,10 @@
+{% extends 'GoTickets/base/base.html' %}
+
+
+{% block content %} <br/>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Checkout</button>
+</form>
+{% endblock %}

@@ -15,18 +15,37 @@
 
     </head>
     <body>
-        <nav>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#}">Navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/events/">Events</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/event/create/">Create Event</a>
+                        </li>
+                    {% endif %}
+                    <!-- The dropdown can stay unchanged or you can modify it as per your requirements -->
+            </div>
             {% if user.is_authenticated %}
-                <span>Welcome, {{ request.user }}</span> <br>
-                    <a href="{% url 'logout' %}" class="nav-link link-dark">
-                        <i class=""></i> Logout
-                    </a>
-            {% else %}
-                <span>Welcome, Guest</span> <br>
-            {% endif %}
-
-
+            <span>Welcome, {{ user.username }}</span> <br>
+            <a href="{% url 'logout' %}" class="nav-link link-dark">
+                Logout
+            </a>
+        {% else %}
+            <a href="{% url 'login' %}" class="nav-link link-dark">Login</a>
+            <a href="{% url 'register' %}" class="nav-link link-dark">Register</a>
+        {% endif %}
         </nav>
+
 
         {% block content %}
 
