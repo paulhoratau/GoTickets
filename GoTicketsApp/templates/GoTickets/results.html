@@ -1,0 +1,22 @@
+
+{% extends 'GoTickets/base/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {{ result_form.as_p }}
+    <button type="submit">Search again</button>
+</form>
+{% if results %}
+    <ul>
+        {% for product in results %}
+            <td><a href="/events/{{ product.id }}">{{ product.title }}</a>- {{ product.description }}</td>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No results found.</p>
+{% endif %}
+
+{% endblock %}

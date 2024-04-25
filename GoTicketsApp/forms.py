@@ -23,3 +23,6 @@ class PurchaseForm(forms.ModelForm):
     class Meta:
         model = Purchase
         fields = ['vip', 'quantity', 'paid']
+
+class SearchForm(forms.Form):
+    query = forms.CharField()

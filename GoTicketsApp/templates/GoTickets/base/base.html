@@ -35,6 +35,7 @@
                     {% endif %}
                     <!-- The dropdown can stay unchanged or you can modify it as per your requirements -->
             </div>
+    
             {% if user.is_authenticated %}
             <span>Welcome, {{ user.username }}</span> <br>
             <a href="{% url 'logout' %}" class="nav-link link-dark">

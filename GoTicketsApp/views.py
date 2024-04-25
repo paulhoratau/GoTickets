@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import CreateUserForm, EventForm, UpdateEventForm, PurchaseForm
+from .forms import CreateUserForm, EventForm, UpdateEventForm, PurchaseForm, SearchForm
 from .models import Event, User, Purchase
 
 
@@ -10,7 +10,15 @@ from .models import Event, User, Purchase
 
 # Create your views here.
 def index(request):
-    return render(request, 'GoTickets/index.html')
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            results = Event.objects.filter(title=query)
+            return render(request, 'GoTickets/results.html', {'form': form, 'results': results})
+    else:
+        form = SearchForm()
+    return render(request, 'GoTickets/index.html', {'form': form})
 
 def eventcreate(request):
     if request.method == "POST":
