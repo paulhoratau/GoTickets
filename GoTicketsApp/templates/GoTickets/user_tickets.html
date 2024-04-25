@@ -1,0 +1,32 @@
+{% extends 'GoTickets/base/base.html' %}
+
+
+{% block content %} <br/>
+<h1>Your Tickets</h1>
+    <div>
+        <h2>Expired Events</h2>
+        {% if expired_events %}
+            <ul>
+                {% for event in expired_events %}
+                    <li><a href="/events/{{ event.id }}">{{ event.title }}</a> - Starts on {{ event.start_date }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No expired events.</p>
+        {% endif %}
+    </div>
+
+    <div>
+        <h2>Upcoming Events</h2>
+        {% if valid_events %}
+            <ul>
+                {% for event in valid_events %}
+                    <li><a href="/events/{{ event.id }}">{{ event.title }}</a> - Starts on {{ event.start_date }}</li>
+                {% endfor %}
+
+            </ul>
+        {% else %}
+            <p>No upcoming events.</p>
+        {% endif %}
+    </div>
+{% endblock %}

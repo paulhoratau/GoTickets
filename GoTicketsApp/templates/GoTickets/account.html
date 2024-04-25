@@ -17,9 +17,7 @@
         <p id="last_login">{{ user.last_login }}</p>
     </div>
     <!-- Buttons for viewing tickets -->
-    <div class="form-group">
-        <button onclick="location.href='#'">See Your Valid Tickets</button>
-        <button onclick="location.href='#'">See Your Expired Tickets</button>
-    </div>
+
+        <a href="{% url 'user_tickets' %}" class="button">View Tickets</a>
 </div>
 {% endblock %}

@@ -3,6 +3,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import CreateUserForm, EventForm, UpdateEventForm, PurchaseForm, SearchForm
 from .models import Event, User, Purchase
+from datetime import date
+from django.db.models.functions import Lower
+from django.utils import timezone
 
 
 
@@ -120,8 +123,11 @@ def account(request):
     }
     return render(request, 'GoTickets/account.html', context)
 
-def valid_tickets(request):
-    return render(request, 'GoTickets/valid_tickets.html')
-
-def expired_tickets(request):
-    return render(request, 'GoTickets/expired_tickets.html')
+def user_tickets(request):
+    today = timezone.now().date()
+    expired_events = Event.objects.filter(end_date__lt =today)
+    valid_events = Event.objects.filter(start_date__gt = today)
+    return render(request, 'GoTickets/user_tickets.html', {
+        'expired_events': expired_events,
+        'valid_events': valid_events,
+    })
