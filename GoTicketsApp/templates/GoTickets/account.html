@@ -1,0 +1,25 @@
+{% extends 'GoTickets/base/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Account Details</h1>
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <p id="username">{{ user.username }}</p>
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <p id="email">{{ user.email }}</p>
+    </div>
+    <div class="form-group">
+        <label for="last_login">Last login:</label>
+        <p id="last_login">{{ user.last_login }}</p>
+    </div>
+    <!-- Buttons for viewing tickets -->
+    <div class="form-group">
+        <button onclick="location.href='#'">See Your Valid Tickets</button>
+        <button onclick="location.href='#'">See Your Expired Tickets</button>
+    </div>
+</div>
+{% endblock %}

@@ -30,7 +30,7 @@ def eventcreate(request):
         form = EventForm()
     return render(request, 'GoTickets/eventcreate.html', {'form': form})
 
-def event_manage(request, id):  # Added 'id' as a parameter
+def event_manage(request, id):
     event = get_object_or_404(Event, id=id)
     if request.method == 'POST':
         form = UpdateEventForm(request.POST, instance=event)
@@ -111,3 +111,17 @@ def checkout(request):
     else:
         form = PurchaseForm()
     return render(request, 'GoTickets/checkout.html', {'form': form})
+
+def account(request):
+    user = request.user
+
+    context = {
+        'user': user
+    }
+    return render(request, 'GoTickets/account.html', context)
+
+def valid_tickets(request):
+    return render(request, 'GoTickets/valid_tickets.html')
+
+def expired_tickets(request):
+    return render(request, 'GoTickets/expired_tickets.html')

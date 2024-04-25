@@ -15,5 +15,7 @@ urlpatterns = [
     path('events/<int:id>/manage/', views.event_manage, name="event_manage"),
 
     path('order/confirmation', views.order_confirmation, name='order_confirmation'),
-     path('checkout/', views.checkout, name='checkout'),
+    path('checkout/', views.checkout, name='checkout'),
+
+    path('account/', views.account, name="account"),
 ]
