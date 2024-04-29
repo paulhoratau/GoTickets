@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from django.conf.urls.static import static
 from django.conf import settings
+from .views import upload_file
 
 urlpatterns = [
     path('', views.index, name="index"),
@@ -10,6 +11,7 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
     path('logout/', views.logoutUser, name="logout"),
 
+     path('upload/', views.upload_file, name='upload_file'),
     path('event/create/', views.eventcreate, name='eventcreate'),
     path('events/', views.events, name='events'),
     path('events/<int:id>/', views.events_by_id, name="events_by_id"),

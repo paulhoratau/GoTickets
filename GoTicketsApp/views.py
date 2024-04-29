@@ -1,11 +1,14 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import CreateUserForm, EventForm, UpdateEventForm, PurchaseForm, SearchForm
+from .forms import CreateUserForm, EventForm, UpdateEventForm, PurchaseForm, SearchForm, UploadFileForm
 from .models import Event, User, Purchase
 from datetime import date
 from django.db.models.functions import Lower
 from django.utils import timezone
+import xml.etree.ElementTree as ET
+from decimal import Decimal
+
 
 
 
@@ -33,6 +36,7 @@ def eventcreate(request):
         form = EventForm()
     return render(request, 'GoTickets/eventcreate.html', {'form': form})
 
+
 def event_manage(request, id):
     event = get_object_or_404(Event, id=id)
     if request.method == 'POST':
@@ -41,7 +45,7 @@ def event_manage(request, id):
             form.save()
             return redirect('events')
         else:
-            print(form.errors)  # Log or print form errors to debug
+            print(form.errors)
     else:
         form = UpdateEventForm(instance=event)
     return render(request, 'GoTickets/event_manage.html', {'form': form})
@@ -131,3 +135,26 @@ def user_tickets(request):
         'expired_events': expired_events,
         'valid_events': valid_events,
     })
+
+
+def upload_file(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request.FILES['file'])
+            return redirect('/events/')  # Redirect to a new URL
+    else:
+        form = UploadFileForm()
+    return render(request, 'GoTickets/upload.html', {'form': form})
+
+def handle_uploaded_file(f):
+    tree = ET.parse(f)
+    root = tree.getroot()
+    for child in root:
+        title = child.find('title').text
+        description = child.find('description').text
+        location = child.find('location').text
+        start_date = child.find('start_date').text
+        end_date = child.find('end_date').text
+        price = Decimal(child.find('price').text)
+        Event.objects.create(title=title, description=description, location=location, start_date=start_date, end_date=end_date, price=price)

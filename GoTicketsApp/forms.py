@@ -26,3 +26,6 @@ class PurchaseForm(forms.ModelForm):
 
 class SearchForm(forms.Form):
     query = forms.CharField()
+
+class UploadFileForm(forms.Form):
+    file = forms.FileField()

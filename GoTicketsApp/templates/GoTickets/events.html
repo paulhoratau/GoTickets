@@ -28,9 +28,7 @@
                 <td>{{ event.start_date | date:"Y-m-d" }}</td>
                 <td>{{ event.end_date | date:"Y-m-d" }}</td>
                 <td>${{ event.price | floatformat:2 }}</td>
-                <td>
-                    <img src="{{ event.image.url }}" alt="{{ event.title }}" style="width:100%;max-width:300px;">
-                </td>
+
             </tr>
             {% endfor %}
         </tbody>
