@@ -22,7 +22,7 @@ class UpdateEventForm(ModelForm):
 class PurchaseForm(forms.ModelForm):
     class Meta:
         model = Purchase
-        fields = ['vip', 'quantity', 'paid']
+        fields = ['vip', 'quantity']
 
 class SearchForm(forms.Form):
     query = forms.CharField()

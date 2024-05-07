@@ -8,7 +8,7 @@
         {% if expired_events %}
             <ul>
                 {% for event in expired_events %}
-                    <li><a href="/events/{{ event.id }}">{{ event.title }}</a> - Ended on {{ event.end_date }}</li>
+                    <li><a href="/events/{{ event.id }}/ticket_confirmation">{{ event.title }}</a> - Ended on {{ event.end_date }}</li>
                 {% endfor %}
             </ul>
         {% else %}

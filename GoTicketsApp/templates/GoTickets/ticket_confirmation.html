@@ -1,0 +1,21 @@
+
+{% extends 'GoTickets/base/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="event-detail">
+    <h1>{{ event.title }}</h1>
+    <img src="{{ event.image.url }}" alt="{{ event.title }}" style="width:100%;max-width:300px;">
+    <p>{{ event.description }}</p>
+    <p>Location: {{ event.location }}</p>
+    <p>Date: {{ event.start_date }} to {{ event.end_date }}</p>
+    <p>Price: ${{ event.price }}</p>
+
+    <!-- QR Code Image -->
+    <div>
+        <h2>Your Ticket QR Code:</h2>
+        <img src="{{ qr_url }}" alt="QR Code for {{ event.title }}" style="width:200px;">
+    </div>
+</div>
+{% endblock %}

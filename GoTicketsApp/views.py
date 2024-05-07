@@ -8,8 +8,10 @@ from django.db.models.functions import Lower
 from django.utils import timezone
 import xml.etree.ElementTree as ET
 from decimal import Decimal
-
-
+from django.db.models import Model
+from .utils import generate_qr_code
+import json
+from django.urls import reverse
 
 
 
@@ -26,15 +28,6 @@ def index(request):
         form = SearchForm()
     return render(request, 'GoTickets/index.html', {'form': form})
 
-def eventcreate(request):
-    if request.method == "POST":
-        form = EventForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('events')
-    else:
-        form = EventForm()
-    return render(request, 'GoTickets/eventcreate.html', {'form': form})
 
 
 def event_manage(request, id):
@@ -129,32 +122,99 @@ def account(request):
 
 def user_tickets(request):
     today = timezone.now().date()
-    expired_events = Event.objects.filter(end_date__lt =today)
-    valid_events = Event.objects.filter(start_date__gt = today)
+    user_purchased_events_ids = Purchase.objects.filter(user=request.user).values_list('event', flat=True)
+
+    expired_events = Event.objects.filter(id__in=user_purchased_events_ids, end_date__lt=today)
+    valid_events = Event.objects.filter(id__in=user_purchased_events_ids, start_date__gt=today)
+
     return render(request, 'GoTickets/user_tickets.html', {
         'expired_events': expired_events,
         'valid_events': valid_events,
     })
 
+def eventcreate(request):
+    upload_form = UploadFileForm()
+    event_form = EventForm()
 
-def upload_file(request):
     if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            handle_uploaded_file(request.FILES['file'])
-            return redirect('/events/')  # Redirect to a new URL
-    else:
-        form = UploadFileForm()
-    return render(request, 'GoTickets/upload.html', {'form': form})
+        if 'upload' in request.POST:
+            upload_form = UploadFileForm(request.POST, request.FILES)
+            if upload_form.is_valid():
+                events = handle_uploaded_file(request.FILES['file'])
+                request.session['events'] = [event for event in events]  # Ensure all events are serializable
+                return render(request, 'GoTickets/confirm_events.html', {'events': events})
+        elif 'create' in request.POST:
+            event_form = EventForm(request.POST, request.FILES)
+            if event_form.is_valid():
+                event = event_form.save(commit=False)  # Assumes EventForm is a ModelForm
+                # Add any additional processing or field setting here
+                event.save()  # Save the event to the database
+                return redirect('/events/')  # Redirect to a confirmation page or similar
+
+    return render(request, 'GoTickets/eventcreate.html', {
+        'upload_form': upload_form,
+        'event_form': event_form
+    })
+
+
+    return render(request, 'GoTickets/eventcreate.html', {
+        'upload_form': upload_form,
+        'event_form': event_form
+    })
+
 
 def handle_uploaded_file(f):
     tree = ET.parse(f)
     root = tree.getroot()
+    events = []
     for child in root:
-        title = child.find('title').text
-        description = child.find('description').text
-        location = child.find('location').text
-        start_date = child.find('start_date').text
-        end_date = child.find('end_date').text
-        price = Decimal(child.find('price').text)
-        Event.objects.create(title=title, description=description, location=location, start_date=start_date, end_date=end_date, price=price)
+        event = {
+            'title': child.find('title').text,
+            'description': child.find('description').text,
+            'location': child.find('location').text,
+            'start_date': child.find('start_date').text,
+            'end_date': child.find('end_date').text,
+            'price': str(child.find('price').text)  # Ensure this is serializable
+        }
+        events.append(event)
+    return events
+
+
+def confirm_post(request):
+    events = request.session.get('events', [])
+    event_data = request.session.get('event_data', {})
+    if request.method == 'POST':
+        if events and request.POST.get('confirm') == 'yes':
+            for event in events:
+                Event.objects.create(**event)
+            del request.session['events']
+            return redirect('/events/')
+        elif event_data and request.POST.get('confirm') == 'yes':
+            Event.objects.create(**event_data)
+            del request.session['event_data']
+            return redirect('/events/')
+        else:
+            # Clear session for both events and event data on cancel
+            request.session.pop('events', None)
+            request.session.pop('event_data', None)
+            return redirect('/upload/')
+
+    return redirect('/upload/')  # Redirect if no POST data or no data in session
+
+def ticket_confirmation(request, id):
+    event = get_object_or_404(Event, pk=id)
+    qr_url = reverse('event_qr', args=[event.id])
+    context = {'event': event, 'qr_url': qr_url}
+    return render(request, 'GoTickets/ticket_confirmation.html', context)
+
+def generate_ticket_qr(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    ticket_data = {
+        "title": event.title,
+        "date": event.start_date.strftime('%Y-%m-%d'),
+        "location": event.location,
+    }
+    img = generate_qr_code(json.dumps(ticket_data))
+    response = HttpResponse(content_type="image/png")
+    img.save(response, "PNG")
+    return response

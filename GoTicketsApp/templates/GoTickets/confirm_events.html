@@ -1,0 +1,20 @@
+<!-- GoTickets/templates/GoTickets/confirm_events.html -->
+{% extends 'GoTickets/base/base.html' %}
+{% block content %}
+<h2>Confirm Events</h2>
+<form method="post" action="{% url 'confirm_post' %}">
+    {% csrf_token %}
+    {% for event in events %}
+    <div>
+        <h3>{{ event.title }}</h3>
+        <p>{{ event.description }}</p>
+        <p>Location: {{ event.location }}</p>
+        <p>Starts: {{ event.start_date }}</p>
+        <p>Ends: {{ event.end_date }}</p>
+        <p>Price: {{ event.price }}</p>
+    </div>
+    {% endfor %}
+    <button type="submit" name="confirm" value="yes">Confirm</button>
+    <button type="submit" name="confirm" value="no">Cancel</button>
+</form>
+{% endblock %}
