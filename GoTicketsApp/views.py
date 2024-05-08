@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import CreateUserForm, EventForm, UpdateEventForm, PurchaseForm, SearchForm, UploadFileForm
-from .models import Event, User, Purchase
+from .forms import CreateUserForm, EventForm, UpdateEventForm, PurchaseForm, SearchForm, UploadFileForm, CardForm
+from .models import Event, User, Purchase, Card
 from datetime import date
 from django.db.models.functions import Lower
 from django.utils import timezone
@@ -60,7 +60,20 @@ def events_by_id(request, id):
             purchase.user = request.user
             purchase.event = event
             purchase.save()
-            return redirect('order_confirmation')
+            request.session['event_details'] = {
+                'id': event.id,
+                'title': event.title,
+                'image_url': event.image.url if event.image else None,
+                'description': event.description,
+                'location': event.location,
+                'start_date': str(event.start_date),
+                'end_date': str(event.end_date),
+                'price': str(event.price),
+                'vip': purchase.vip,
+                'quantity': purchase.quantity,
+
+            }
+            return redirect('checkout')
     else:
         form = PurchaseForm()
 
@@ -69,6 +82,28 @@ def events_by_id(request, id):
         'form': form,
     }
     return render(request, 'GoTickets/events_by_id.html', context)
+
+
+
+def checkout(request):
+    event_details = request.session.get('event_details', {})
+
+    if request.method == "POST":
+        card = CardForm(request.POST)
+        if card.is_valid():
+            card.save()
+            return redirect('order_confirmation')
+    else:
+        card = CardForm()
+
+    context = {
+        'card': card,
+        'event': event_details,
+    }
+
+    return render(request, 'GoTickets/checkout.html', context)
+
+
 
 
 def register(request):
@@ -102,15 +137,6 @@ def logoutUser(request):
 def order_confirmation(request):
     return render(request, 'GoTickets/order_confirmation.html')
 
-def checkout(request):
-    if request.method == "POST":
-        form = PurchaseForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('order_confirmation')
-    else:
-        form = PurchaseForm()
-    return render(request, 'GoTickets/checkout.html', {'form': form})
 
 def account(request):
     user = request.user
@@ -157,12 +183,6 @@ def eventcreate(request):
     })
 
 
-    return render(request, 'GoTickets/eventcreate.html', {
-        'upload_form': upload_form,
-        'event_form': event_form
-    })
-
-
 def handle_uploaded_file(f):
     tree = ET.parse(f)
     root = tree.getroot()
@@ -194,7 +214,7 @@ def confirm_post(request):
             del request.session['event_data']
             return redirect('/events/')
         else:
-           
+
             request.session.pop('events', None)
             request.session.pop('event_data', None)
             return redirect('/upload/')

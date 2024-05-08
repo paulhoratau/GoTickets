@@ -22,7 +22,7 @@ urlpatterns = [
 
 
     path('order/confirmation', views.order_confirmation, name='order_confirmation'),
-    path('checkout/', views.checkout, name='checkout'),
+    path('order/checkout/', views.checkout, name='checkout'),
 
     path('account/', views.account, name="account"),
     path('account/user_tickets/', views.user_tickets, name="user_tickets"),

@@ -1,14 +1,15 @@
 {% extends 'GoTickets/base/base.html' %}
 
 {% block content %}
-<!-- GoTickets/events_by_id.html -->
+
 <div class="event-detail">
   <h1>{{ event.title }}</h1>
   <img src="{{ event.image.url }}" alt="{{ event.title }}" style="width:100%;max-width:300px;">
-  <p>{{ event.description }}</p>
+  <p>Description: {{ event.description }}</p>
   <p>Location: {{ event.location }}</p>
   <p>Date: {{ event.start_date }} to {{ event.end_date }}</p>
   <p>Price: ${{ event.price }}</p>
+
 
 </div>
 <form method="post">

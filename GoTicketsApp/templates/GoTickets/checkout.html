@@ -1,10 +1,28 @@
 {% extends 'GoTickets/base/base.html' %}
 
 
-{% block content %} <br/>
-<form method="post">
+{% block content %}
+<div class="event-detail">
+    <h1>{{ event.title }}</h1>
+    {% if event.image_url %}
+      <img src="{{ event.image_url }}" alt="{{ event.title }}" style="width:100%;max-width:300px;">
+    {% endif %}
+    <p>Description: {{ event.description }}</p>
+    <p>Location: {{ event.location }}</p>
+    <p>Date: {{ event.start_date }} to {{ event.end_date }}</p>
+    <p>Price: ${{ event.price }}</p>
+    <p>VIP Access: {{ event.vip }}</p>
+    <p>Quantity: {{ event.quantity }}</p>
+  </div>
+
+  <!-- Rest of the checkout form -->
+
+
+
+<form method="post" action="">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Checkout</button>
-</form>
+    {{ card }}
+    <button type="submit">PAY</button>
+  </form>
+
 {% endblock %}

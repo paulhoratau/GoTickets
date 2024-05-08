@@ -20,3 +20,8 @@ class Purchase(models.Model):
     quantity = models.IntegerField(default=1)
     purchase_date = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False)
+
+class Card(models.Model):
+    card_number = models.CharField(max_length=16)
+    date = models.CharField(max_length=5)
+    cvv = models.CharField(max_length=3)
