@@ -12,7 +12,7 @@ class CreateUserForm(UserCreationForm):
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields =  '__all__'
+        fields =  ['title', 'description', 'location', 'start_date', 'end_date', 'image', 'price']
 
 class UpdateEventForm(ModelForm):
     class Meta:

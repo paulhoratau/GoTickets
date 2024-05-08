@@ -10,13 +10,13 @@
   <p>Date: {{ event.start_date }} to {{ event.end_date }}</p>
   <p>Price: ${{ event.price }}</p>
 
-  <!-- Add to Cart Form -->
 </div>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Checkout</button>
-</form>
+</form><br/><br/>
+<a href="/events/{{ event.id }}/manage/" class="button-style"><button>Edit Event</button></a>
 
 
 

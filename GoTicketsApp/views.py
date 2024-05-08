@@ -141,15 +141,15 @@ def eventcreate(request):
             upload_form = UploadFileForm(request.POST, request.FILES)
             if upload_form.is_valid():
                 events = handle_uploaded_file(request.FILES['file'])
-                request.session['events'] = [event for event in events]  # Ensure all events are serializable
+                request.session['events'] = [event for event in events]
                 return render(request, 'GoTickets/confirm_events.html', {'events': events})
         elif 'create' in request.POST:
             event_form = EventForm(request.POST, request.FILES)
             if event_form.is_valid():
-                event = event_form.save(commit=False)  # Assumes EventForm is a ModelForm
-                # Add any additional processing or field setting here
-                event.save()  # Save the event to the database
-                return redirect('/events/')  # Redirect to a confirmation page or similar
+                event = event_form.save(commit=False)
+                event.organizer = request.user
+                event.save()
+                return redirect('/events/')
 
     return render(request, 'GoTickets/eventcreate.html', {
         'upload_form': upload_form,
@@ -174,7 +174,7 @@ def handle_uploaded_file(f):
             'location': child.find('location').text,
             'start_date': child.find('start_date').text,
             'end_date': child.find('end_date').text,
-            'price': str(child.find('price').text)  # Ensure this is serializable
+            'price': str(child.find('price').text)
         }
         events.append(event)
     return events
@@ -194,12 +194,12 @@ def confirm_post(request):
             del request.session['event_data']
             return redirect('/events/')
         else:
-            # Clear session for both events and event data on cancel
+           
             request.session.pop('events', None)
             request.session.pop('event_data', None)
             return redirect('/upload/')
 
-    return redirect('/upload/')  # Redirect if no POST data or no data in session
+    return redirect('/upload/')
 
 def ticket_confirmation(request, id):
     event = get_object_or_404(Event, pk=id)
