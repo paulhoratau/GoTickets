@@ -18,6 +18,7 @@ urlpatterns = [
     path('events/<int:id>/manage/', views.event_manage, name="event_manage"),
     path('events/<int:id>/ticket_confirmation', views.ticket_confirmation, name="ticket_confirmation"),
     path('events/<int:event_id>/qr/', views.generate_ticket_qr, name='event_qr'),
+    path('events/<int:event_id>/download-ticket/', views.download_ticket_pdf, name='download_ticket_pdf'),
     path('confirm_post/xml', views.confirm_post, name="confirm_post"),
 
 

@@ -21,7 +21,9 @@
 
 <form method="post" action="">
     {% csrf_token %}
-    {{ card }}
+    <p>CARD NUMBER: </p>{{ card.card_number }}
+    <p>DATE: </p>{{ card.date }}
+    <p>CVV: </p>{{ card.cvv }}<br/></br>
     <button type="submit">PAY</button>
   </form>
 

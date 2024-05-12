@@ -1,19 +1,36 @@
+# Django imports
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import CreateUserForm, EventForm, UpdateEventForm, PurchaseForm, SearchForm, UploadFileForm, CardForm
-from .models import Event, User, Purchase, Card
-from datetime import date
-from django.db.models.functions import Lower
+from django.urls import reverse
+from django.db.models import Model
 from django.utils import timezone
+from django.db.models.functions import Lower
+from django.http import HttpRequest
+
+# Forms and Models
+from .forms import (
+    CreateUserForm, EventForm, UpdateEventForm,
+    PurchaseForm, SearchForm, UploadFileForm, CardForm
+)
+from .models import Event, User, Purchase, Card
+
+# Other imports
+from datetime import date
+import json
 import xml.etree.ElementTree as ET
 from decimal import Decimal
-from django.db.models import Model
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+import reportlab
+from PIL import Image
+from io import BytesIO
+from reportlab.lib.utils import ImageReader
+import qrcode
+from base64 import b64encode
+
+# Custom Utilities
 from .utils import generate_qr_code
-import json
-from django.urls import reverse
-
-
 
 
 # Create your views here.
@@ -158,7 +175,7 @@ def user_tickets(request):
         'valid_events': valid_events,
     })
 
-def eventcreate(request):
+def eventcreate(request: HttpRequest):
     upload_form = UploadFileForm()
     event_form = EventForm()
 
@@ -167,13 +184,16 @@ def eventcreate(request):
             upload_form = UploadFileForm(request.POST, request.FILES)
             if upload_form.is_valid():
                 events = handle_uploaded_file(request.FILES['file'])
-                request.session['events'] = [event for event in events]
+                # Store events in the session and add the logged-in user as the organizer
+                for event in events:
+                    event['organizer_id'] = request.user.id  # assuming organizer is a foreign key to User
+                request.session['events'] = events
                 return render(request, 'GoTickets/confirm_events.html', {'events': events})
         elif 'create' in request.POST:
             event_form = EventForm(request.POST, request.FILES)
             if event_form.is_valid():
                 event = event_form.save(commit=False)
-                event.organizer = request.user
+                event.organizer = request.user  # set the organizer to the currently logged-in user
                 event.save()
                 return redirect('/events/')
 
@@ -182,59 +202,116 @@ def eventcreate(request):
         'event_form': event_form
     })
 
-
 def handle_uploaded_file(f):
     tree = ET.parse(f)
     root = tree.getroot()
     events = []
     for child in root:
         event = {
-            'title': child.find('title').text,
-            'description': child.find('description').text,
-            'location': child.find('location').text,
-            'start_date': child.find('start_date').text,
-            'end_date': child.find('end_date').text,
-            'price': str(child.find('price').text)
+            'title': child.findtext('title', default=''),  # Default to empty string if not found
+            'description': child.findtext('description', default=''),
+            'location': child.findtext('location', default=''),
+            'start_date': child.findtext('start_date', default=''),
+            'end_date': child.findtext('end_date', default=''),
+            'price': child.findtext('price', default='0')  # Default price as '0' if not found
         }
         events.append(event)
     return events
 
-
-def confirm_post(request):
+def confirm_post(request: HttpRequest):
     events = request.session.get('events', [])
-    event_data = request.session.get('event_data', {})
     if request.method == 'POST':
         if events and request.POST.get('confirm') == 'yes':
             for event in events:
-                Event.objects.create(**event)
+                organizer_id = event.pop('organizer_id', None)  # Remove the organizer_id from the event dictionary
+                if organizer_id:
+                    Event.objects.create(**event, organizer_id=organizer_id)
             del request.session['events']
             return redirect('/events/')
-        elif event_data and request.POST.get('confirm') == 'yes':
-            Event.objects.create(**event_data)
-            del request.session['event_data']
-            return redirect('/events/')
         else:
-
             request.session.pop('events', None)
-            request.session.pop('event_data', None)
             return redirect('/upload/')
 
     return redirect('/upload/')
 
 def ticket_confirmation(request, id):
     event = get_object_or_404(Event, pk=id)
-    qr_url = reverse('event_qr', args=[event.id])
-    context = {'event': event, 'qr_url': qr_url}
-    return render(request, 'GoTickets/ticket_confirmation.html', context)
+    qr_img = generate_ticket_qr(id)  # Assuming generate_ticket_qr returns a PIL Image object
 
-def generate_ticket_qr(request, event_id):
+    buffer = BytesIO()
+    qr_img.save(buffer, format="PNG")
+    qr_code_base64 = b64encode(buffer.getvalue()).decode('utf-8')
+
+    return render(request, 'GoTickets/ticket_confirmation.html', {
+        'event': event,
+        'qr_code_base64': qr_code_base64,
+    })
+
+def generate_ticket_qr(event_id):
+    # Retrieve the event object or raise 404 if not found
     event = get_object_or_404(Event, pk=event_id)
+
+    # Create ticket data dictionary
     ticket_data = {
         "title": event.title,
         "date": event.start_date.strftime('%Y-%m-%d'),
         "location": event.location,
     }
-    img = generate_qr_code(json.dumps(ticket_data))
-    response = HttpResponse(content_type="image/png")
-    img.save(response, "PNG")
+
+    # Convert ticket data to JSON and generate QR code
+    qr = qrcode.QRCode(
+        version=1,  # Adjust QR code version if necessary
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(json.dumps(ticket_data))
+    qr.make(fit=True)
+
+    # Create an image from the QR Code instance
+    img = qr.make_image(fill='black', back_color='white')
+
+    # img is a PIL Image object and can be returned, saved, or manipulated further
+    return img
+
+def download_ticket_pdf(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    purchases = Purchase.objects.filter(event=event, user=request.user).order_by('-purchase_date')
+
+    if not purchases.exists():
+        return HttpResponse("No ticket purchases found.", status=404)
+
+    qr_img = generate_ticket_qr(event_id)  # Get QR code as an image object
+    buffer = BytesIO()
+    qr_img.save(buffer, format='PNG')
+    buffer.seek(0)
+    qr_image = ImageReader(buffer)  # Convert the BytesIO stream to ImageReader
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{event.title}-ticket.pdf"'
+
+    p = canvas.Canvas(response, pagesize=letter)
+    width, height = letter
+
+    for purchase in purchases:
+        p.setFont("Helvetica-Bold", 14)
+        p.drawString(72, height - 72, event.title)
+        if event.image:
+            p.drawImage(event.image.path, 72, height - 200, width=200, height=100)
+
+        p.drawImage(qr_image, 280, height - 200, width=100, height=100)  # Use ImageReader object for QR code
+
+        p.setFont("Helvetica", 12)
+        p.drawString(72, height - 220, f"Organized by: {event.organizer.username if event.organizer else 'N/A'}")
+        p.drawString(72, height - 240, "Location: " + event.location)
+        p.drawString(72, height - 260, "Starts: " + event.start_date.strftime('%Y-%m-%d'))
+        p.drawString(72, height - 280, "Ends: " + event.end_date.strftime('%Y-%m-%d'))
+        p.drawString(72, height - 300, f"Price: ${event.price}")
+        p.drawString(72, height - 320, f"VIP Access: {'Yes' if purchase.vip else 'No'}")
+        p.drawString(72, height - 340, f"Quantity: {purchase.quantity}")
+        p.drawString(72, height - 360, "Purchased on: " + purchase.purchase_date.strftime('%Y-%m-%d %H:%M'))
+
+        p.showPage()
+
+    p.save()
     return response

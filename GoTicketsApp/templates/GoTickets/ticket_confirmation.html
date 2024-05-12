@@ -15,7 +15,8 @@
     <!-- QR Code Image -->
     <div>
         <h2>Your Ticket QR Code:</h2>
-        <img src="{{ qr_url }}" alt="QR Code for {{ event.title }}" style="width:200px;">
+        <img src="data:image/png;base64,{{ qr_code_base64 }}" alt="QR Code for {{ event.title }}" style="width:200px;">
     </div>
+    <a href="{% url 'download_ticket_pdf' event.id %}">Download Ticket as PDF</a>
 </div>
 {% endblock %}
