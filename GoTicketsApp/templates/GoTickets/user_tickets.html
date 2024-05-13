@@ -21,7 +21,7 @@
         {% if valid_events %}
             <ul>
                 {% for event in valid_events %}
-                    <li><a href="/events/{{ event.id }}">{{ event.title }}</a> - Starts on {{ event.start_date }}</li>
+                    <li><a href="/events/{{ event.id }}/ticket_confirmation">{{ event.title }}</a> - Starts on {{ event.start_date }}</li>
                 {% endfor %}
 
             </ul>
