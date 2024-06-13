@@ -1,4 +1,11 @@
-media/images
-myenv
-path/to/venv
-.DS_Store
+# Ignore all .log files
+*.log
+
+# Ignore node_modules directory
+node_modules/
+
+# Ignore all files ending with .tmp
+*.tmp
+
+# Ignore all .env files
+.env
