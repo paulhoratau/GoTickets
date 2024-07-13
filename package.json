@@ -1,0 +1,13 @@
+{
+  "name": "gotickets",
+  "version": "1.0.0",
+  "description": "Through this project i learned to do some functionalities, like:",
+  "main": "postcss.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "tailwindcss build -i GoTicketsApp/static/css/tailwind.css -o GoTicketsApp/static/css/style.css --watch --config ./tailwind.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

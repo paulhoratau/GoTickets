@@ -4,35 +4,164 @@
 
 
 {% block content %}
-<div class="event-table-container">
-    <table class="event-table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Organizer</th>
-                <th>Description</th>
-                <th>Location</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Price</th>
-                <th>Image</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for event in events %}
-            <tr>
-                <td><a href="/events/{{ event.id }}">{{ event.title }}</a></td>
-                <td>{{ event.organizer }}</td>
-                <td>{{ event.description }}</td>
-                <td>{{ event.location }}</td>
-                <td>{{ event.start_date | date:"Y-m-d" }}</td>
-                <td>{{ event.end_date | date:"Y-m-d" }}</td>
-                <td>${{ event.price | floatformat:2 }}</td>
 
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+
+<div class="max-w-screen-xl mx-auto text-gray-400 pb-20 mt-20 px-10">
+    <div class="flex flex-col items-center">
+        <h1 class="w-full lg:w-2/3 text-5xl flex items-center text-white tracking-wide mb-10 font-extrabold text-center">Unlimited entertainment, activities and more.</h1>
+        <p class="text-lg leading-normal">GoTickets is the leading destination to find & book events to the world's best activities.</p>
+    </div>
+    <form class="max-w-2xl mx-auto mt-10">
+        <div class="flex">
+            <select id="countries" class="flex-shrink-1 bg-gray-50 border border-gray-300 text-gray-900 rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <option selected>Choose a category</option>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="FR">France</option>
+                <option value="DE">Germany</option>
+              </select>
+            <div class="relative w-full">
+                <input type="search" id="search-dropdown" class="block p-2.5 w-full z-20 text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-s-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="Search concerts, events..." required />
+                <button type="submit" class="absolute flex items-center top-0 end-0 p-2.5 px-5 text-sm font-medium h-full text-white bg-blue-700 rounded-e-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                    </svg>
+                    <span class="sr-only">Search</span>
+                </button>
+            </div>
+        </div>
+    </form>
 </div>
-
+<div class="max-w-screen-xl mx-auto text-gray-400 pb-20 mt-20 px-10">
+<div>
+    <h1 class="text-3xl flex items-center text-white tracking-wide mb-10 font-extrabold">Featured</h1>
+    <div class="flex flex-col lg:flex-row gap-5 grid-cols-2">
+        <div class="flex-shrink-0 w-full lg:w-1/2 relative">
+            <div class="flex justify-between absolute w-full px-4 bottom-4">
+                <div class="rounded-lg bg-black px-5 py-2 shadow-md dark:border-gray-600 text-white flex items-center">
+                    <span class="font-semibold mr-4">Bill Bur</span>
+                    <span class="font-light">11 June</span>
+                </div>
+                <div class="rounded-lg bg-white dark:bg-black shadow-md dark:border-gray-600 text-white flex items-center">
+                    <div class="px-5 py-2">£24</div>
+                    <div class="px-5 py-2 bg-blue-600 rounded-r-lg flex items-center">
+                        Buy tickets <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-right"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+                    </div>
+                </div>
+            </div>
+            <img class="rounded-3xl" src="https://visitbath.co.uk/imageresizer/?image=%2Fdbimgs%2FGallery%20-%20Whats%20On%20-%20Comedy%20-%20Komedia.jpg&action=FeaturedItemsGalleryProElite3x2" alt="">
+        </div>
+        <div class="flex-shrink-0 w-full lg:w-1/2 relative">
+            <div class="flex justify-between absolute w-full px-4 bottom-4">
+                <div class="rounded-lg bg-black px-5 py-2 shadow-md dark:border-gray-600 text-white flex items-center">
+                    <span class="font-semibold mr-4">Bill Bur</span>
+                    <span class="font-light">11 June</span>
+                </div>
+                <div class="rounded-lg bg-white dark:bg-black shadow-md dark:border-gray-600 text-white flex items-center">
+                    <div class="px-5 py-2">£24</div>
+                    <div class="px-5 py-2 bg-blue-600 rounded-r-lg flex items-center">
+                        Buy tickets <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-right"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+                    </div>
+                </div>
+            </div>
+            <img class="rounded-3xl" src="https://visitbath.co.uk/imageresizer/?image=%2Fdbimgs%2FGallery%20-%20Whats%20On%20-%20Comedy%20-%20Komedia.jpg&action=FeaturedItemsGalleryProElite3x2" alt="">
+        </div>
+    </div>
+</div>
+</div>
+<div class="max-w-screen-xl mx-auto text-gray-400 pb-20 mt-20 px-10">
+    <h1 class="text-3xl flex items-center text-white tracking-wide mb-10 font-extrabold">All events</h1>
+    <div class="grid gap-y-8 gap-x-5 grid-cols-1 lg:grid-cols-2">
+        <div class="flex-shrink-0 w-full relative">
+            <div class="flex justify-between absolute w-full px-4 bottom-4">
+                <div class="rounded-lg bg-black px-5 py-2 shadow-md dark:border-gray-600 text-white flex items-center">
+                    <span class="font-semibold mr-4">Bill Bur</span>
+                    <span class="font-light">11 June</span>
+                </div>
+                <div class="rounded-lg bg-white dark:bg-black shadow-md dark:border-gray-600 text-white flex items-center">
+                    <div class="px-5 py-2">£24</div>
+                    <div class="px-5 py-2 bg-blue-600 rounded-r-lg flex items-center">
+                        Buy tickets <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-right"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+                    </div>
+                </div>
+            </div>
+            <img class="rounded-3xl" src="https://visitbath.co.uk/imageresizer/?image=%2Fdbimgs%2FGallery%20-%20Whats%20On%20-%20Comedy%20-%20Komedia.jpg&action=FeaturedItemsGalleryProElite3x2" alt="">
+        </div>
+        <div class="flex-shrink-0 w-full relative">
+            <div class="flex justify-between absolute w-full px-4 bottom-4">
+                <div class="rounded-lg bg-black px-5 py-2 shadow-md dark:border-gray-600 text-white flex items-center">
+                    <span class="font-semibold mr-4">Bill Bur</span>
+                    <span class="font-light">11 June</span>
+                </div>
+                <div class="rounded-lg bg-white dark:bg-black shadow-md dark:border-gray-600 text-white flex items-center">
+                    <div class="px-5 py-2">£24</div>
+                    <div class="px-5 py-2 bg-blue-600 rounded-r-lg flex items-center">
+                        Buy tickets <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-right"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+                    </div>
+                </div>
+            </div>
+            <img class="rounded-3xl" src="https://visitbath.co.uk/imageresizer/?image=%2Fdbimgs%2FGallery%20-%20Whats%20On%20-%20Comedy%20-%20Komedia.jpg&action=FeaturedItemsGalleryProElite3x2" alt="">
+        </div>
+        <div class="flex-shrink-0 w-full relative">
+            <div class="flex justify-between absolute w-full px-4 bottom-4">
+                <div class="rounded-lg bg-black px-5 py-2 shadow-md dark:border-gray-600 text-white flex items-center">
+                    <span class="font-semibold mr-4">Bill Bur</span>
+                    <span class="font-light">11 June</span>
+                </div>
+                <div class="rounded-lg bg-white dark:bg-black shadow-md dark:border-gray-600 text-white flex items-center">
+                    <div class="px-5 py-2">£24</div>
+                    <div class="px-5 py-2 bg-blue-600 rounded-r-lg flex items-center">
+                        Buy tickets <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-right"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+                    </div>
+                </div>
+            </div>
+            <img class="rounded-3xl" src="https://visitbath.co.uk/imageresizer/?image=%2Fdbimgs%2FGallery%20-%20Whats%20On%20-%20Comedy%20-%20Komedia.jpg&action=FeaturedItemsGalleryProElite3x2" alt="">
+        </div>
+        <div class="flex-shrink-0 w-full relative">
+            <div class="flex justify-between absolute w-full px-4 bottom-4">
+                <div class="rounded-lg bg-black px-5 py-2 shadow-md dark:border-gray-600 text-white flex items-center">
+                    <span class="font-semibold mr-4">Bill Bur</span>
+                    <span class="font-light">11 June</span>
+                </div>
+                <div class="rounded-lg bg-white dark:bg-black shadow-md dark:border-gray-600 text-white flex items-center">
+                    <div class="px-5 py-2">£24</div>
+                    <div class="px-5 py-2 bg-blue-600 rounded-r-lg flex items-center">
+                        Buy tickets <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-right"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+                    </div>
+                </div>
+            </div>
+            <img class="rounded-3xl" src="https://visitbath.co.uk/imageresizer/?image=%2Fdbimgs%2FGallery%20-%20Whats%20On%20-%20Comedy%20-%20Komedia.jpg&action=FeaturedItemsGalleryProElite3x2" alt="">
+        </div>
+        <div class="flex-shrink-0 w-full relative">
+            <div class="flex justify-between absolute w-full px-4 bottom-4">
+                <div class="rounded-lg bg-black px-5 py-2 shadow-md dark:border-gray-600 text-white flex items-center">
+                    <span class="font-semibold mr-4">Bill Bur</span>
+                    <span class="font-light">11 June</span>
+                </div>
+                <div class="rounded-lg bg-white dark:bg-black shadow-md dark:border-gray-600 text-white flex items-center">
+                    <div class="px-5 py-2">£24</div>
+                    <div class="px-5 py-2 bg-blue-600 rounded-r-lg flex items-center">
+                        Buy tickets <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-right"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+                    </div>
+                </div>
+            </div>
+            <img class="rounded-3xl" src="https://visitbath.co.uk/imageresizer/?image=%2Fdbimgs%2FGallery%20-%20Whats%20On%20-%20Comedy%20-%20Komedia.jpg&action=FeaturedItemsGalleryProElite3x2" alt="">
+        </div>
+        <div class="flex-shrink-0 w-full relative">
+            <div class="flex justify-between absolute w-full px-4 bottom-4">
+                <div class="rounded-lg bg-black px-5 py-2 shadow-md dark:border-gray-600 text-white flex items-center">
+                    <span class="font-semibold mr-4">Bill Bur</span>
+                    <span class="font-light">11 June</span>
+                </div>
+                <div class="rounded-lg bg-white dark:bg-black shadow-md dark:border-gray-600 text-white flex items-center">
+                    <div class="px-5 py-2">£24</div>
+                    <div class="px-5 py-2 bg-blue-600 rounded-r-lg flex items-center">
+                        Buy tickets <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-right"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+                    </div>
+                </div>
+            </div>
+            <img class="rounded-3xl" src="https://visitbath.co.uk/imageresizer/?image=%2Fdbimgs%2FGallery%20-%20Whats%20On%20-%20Comedy%20-%20Komedia.jpg&action=FeaturedItemsGalleryProElite3x2" alt="">
+        </div>
+    </div>
+</div>
 {% endblock %}

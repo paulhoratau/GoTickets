@@ -1,0 +1,73 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+    <head>
+        {% block head %}
+        {% endblock %}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>GoTickets</title>
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    </head>
+    <body class="bg-gray-950 relative">
+        <nav class="border-gray-200 dark:border-gray-700 border-b py-2">
+            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <img src="{% static 'gologo.svg' %}" class="h-8" alt="GoTickets Logo" />
+                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">GoTickets</span>
+            </a>
+            <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
+                <span class="sr-only">Open main menu</span>
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+                </svg>
+            </button>
+            <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+                <ul class="font-medium flex items-center flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 dark:border-gray-700">
+                <li>
+                    <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent flex items-center">
+                        <span class="flex-shrink-0">Welcome, {{ user.username }}</span>
+                        <img class="rounded-full w-[30px] h-[30px] block ml-5" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gough.png" alt="">
+                    </a>
+                </li>
+                <li><div class="h-[20px] border-r border-gray-700 block w-1"></div></li>
+                <li>
+                    <a href="{% url 'logout' %}" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
+                        Logout
+                    </a>
+                </li>
+                </ul>
+            </div>
+            </div>
+        </nav>
+        <nav class="bg-gray-800 border-gray-200 dark:border-gray-700 border-b">
+            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+                <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 dark:border-gray-700">
+                    <li><a href="{% url 'login' %}" class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Account settings</a></li>
+                    <li><a href="{% url 'register' %}" class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">My tickets</a></li>
+                    <li><a href="{% url 'login' %}" class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">My events</a></li>
+                    </ul>
+            </div>
+        </nav>
+        {% block content %}
+
+        {% endblock %}
+
+        <div class="border-t border-gray-700 py-6 text-gray-400 mt-20">
+            <div class="max-w-screen-xl px-4 mx-auto flex items-center justify-between">
+                <div class="px-4">
+                    <span class="block">Released under the ISC License.</span>
+                    <span class="block">Copyright © 2024 Uphack.io</span>
+                </div>
+                <div class="flex">
+                    <a href="" class="mr-8">License</a>
+                    <a href="" class="mr-8">Contribute</a>
+                    <a href="" class="mr-8">Changelog</a>
+                    <a href="" class="mr-8">Github</a>
+                    <a href="" class="">Issues</a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
