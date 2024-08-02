@@ -2,21 +2,41 @@
 {% extends 'GoTickets/base/base.html' %}
 {% load static %}
 
-
 {% block content %}
-<form method="post">
+<form method="post" class="max-w-md mx-auto">
     {% csrf_token %}
-    {{ result_form.as_p }}
-    <button type="submit">Search again</button>
+    {{ form.as_p }}
+    <button type="submit" class="block w-full text-white flex text-lg justify-center items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg w-full sm:w-auto px-8 py-4 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+        <svg xmlns="http://www.w3.org/2000/svg" class="mr-4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rocket">
+            <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+            <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+            <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+            <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+        </svg>
+        Find your next adventure
+    </button>
 </form>
+
 {% if results %}
-    <ul>
+    <div class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {% for product in results %}
-            <td><a href="/events/{{ product.id }}">{{ product.title }}</a>- {{ product.description }}</td>
+            <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <a href="/event/{{ product.id }}" class="block">
+                    <img src="{{ product.image.url }}" alt="{{ product.title }}" class="w-full h-48 object-cover">
+                    <div class="p-5">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">{{ product.title }}</h3>
+                        <p class="text-gray-700 dark:text-gray-300 mb-4">{{ product.description|truncatewords:20 }}</p>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">From: {{ product.start_date }}</div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">To: {{ product.end_date }}</div>
+                    </div>
+                </a>
+            </div>
         {% endfor %}
-    </ul>
+    </div>
 {% else %}
-    <p>No results found.</p>
+    <p class="mt-5 text-gray-700 dark:text-gray-300">No results found.</p>
 {% endif %}
+
+
 
 {% endblock %}

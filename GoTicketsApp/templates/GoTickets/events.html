@@ -15,10 +15,9 @@
         <div class="flex">
             <select id="countries" class="flex-shrink-1 bg-gray-50 border border-gray-300 text-gray-900 rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option selected>Choose a category</option>
-                <option value="US">United States</option>
-                <option value="CA">Canada</option>
-                <option value="FR">France</option>
-                <option value="DE">Germany</option>
+                <option value="US">Stand-up Comedy</option>
+                <option value="CA">Theatre</option>
+                <option value="FR">Music</option>
               </select>
             <div class="relative w-full">
                 <input type="search" id="search-dropdown" class="block p-2.5 w-full z-20 text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-s-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="Search concerts, events..." required />
@@ -72,96 +71,28 @@
 <div class="max-w-screen-xl mx-auto text-gray-400 pb-20 mt-20 px-10">
     <h1 class="text-3xl flex items-center text-white tracking-wide mb-10 font-extrabold">All events</h1>
     <div class="grid gap-y-8 gap-x-5 grid-cols-1 lg:grid-cols-2">
+        {% for event in events %}
         <div class="flex-shrink-0 w-full relative">
             <div class="flex justify-between absolute w-full px-4 bottom-4">
                 <div class="rounded-lg bg-black px-5 py-2 shadow-md dark:border-gray-600 text-white flex items-center">
-                    <span class="font-semibold mr-4">Bill Bur</span>
-                    <span class="font-light">11 June</span>
+                    <span class="font-semibold mr-4">{{ event.organizer }}</span>
+                    <span class="font-light">{{ event.start_date }}</span>
                 </div>
                 <div class="rounded-lg bg-white dark:bg-black shadow-md dark:border-gray-600 text-white flex items-center">
-                    <div class="px-5 py-2">£24</div>
+                    <div class="px-5 py-2">${{ event.price }}</div>
                     <div class="px-5 py-2 bg-blue-600 rounded-r-lg flex items-center">
-                        Buy tickets <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-right"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+                        <a href="/event/{{ event.id }}">Buy tickets</a><svg xmlns="http://www.w3.org/2000/svg" class="ml-2" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-right"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
                     </div>
                 </div>
             </div>
-            <img class="rounded-3xl" src="https://visitbath.co.uk/imageresizer/?image=%2Fdbimgs%2FGallery%20-%20Whats%20On%20-%20Comedy%20-%20Komedia.jpg&action=FeaturedItemsGalleryProElite3x2" alt="">
+            {% if event.image %}
+                <img class="rounded-3xl" src="{{ event.image.url }}" alt="{{ event.name }}">
+            {% else %}
+                <img class="rounded-3xl" src="https://visitbath.co.uk/imageresizer/?image=%2Fdbimgs%2FGallery%20-%20Whats%20On%20-%20Comedy%20-%20Komedia.jpg&action=FeaturedItemsGalleryProElite3x2" alt="Default Image">
+            {% endif %}
         </div>
-        <div class="flex-shrink-0 w-full relative">
-            <div class="flex justify-between absolute w-full px-4 bottom-4">
-                <div class="rounded-lg bg-black px-5 py-2 shadow-md dark:border-gray-600 text-white flex items-center">
-                    <span class="font-semibold mr-4">Bill Bur</span>
-                    <span class="font-light">11 June</span>
-                </div>
-                <div class="rounded-lg bg-white dark:bg-black shadow-md dark:border-gray-600 text-white flex items-center">
-                    <div class="px-5 py-2">£24</div>
-                    <div class="px-5 py-2 bg-blue-600 rounded-r-lg flex items-center">
-                        Buy tickets <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-right"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
-                    </div>
-                </div>
-            </div>
-            <img class="rounded-3xl" src="https://visitbath.co.uk/imageresizer/?image=%2Fdbimgs%2FGallery%20-%20Whats%20On%20-%20Comedy%20-%20Komedia.jpg&action=FeaturedItemsGalleryProElite3x2" alt="">
-        </div>
-        <div class="flex-shrink-0 w-full relative">
-            <div class="flex justify-between absolute w-full px-4 bottom-4">
-                <div class="rounded-lg bg-black px-5 py-2 shadow-md dark:border-gray-600 text-white flex items-center">
-                    <span class="font-semibold mr-4">Bill Bur</span>
-                    <span class="font-light">11 June</span>
-                </div>
-                <div class="rounded-lg bg-white dark:bg-black shadow-md dark:border-gray-600 text-white flex items-center">
-                    <div class="px-5 py-2">£24</div>
-                    <div class="px-5 py-2 bg-blue-600 rounded-r-lg flex items-center">
-                        Buy tickets <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-right"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
-                    </div>
-                </div>
-            </div>
-            <img class="rounded-3xl" src="https://visitbath.co.uk/imageresizer/?image=%2Fdbimgs%2FGallery%20-%20Whats%20On%20-%20Comedy%20-%20Komedia.jpg&action=FeaturedItemsGalleryProElite3x2" alt="">
-        </div>
-        <div class="flex-shrink-0 w-full relative">
-            <div class="flex justify-between absolute w-full px-4 bottom-4">
-                <div class="rounded-lg bg-black px-5 py-2 shadow-md dark:border-gray-600 text-white flex items-center">
-                    <span class="font-semibold mr-4">Bill Bur</span>
-                    <span class="font-light">11 June</span>
-                </div>
-                <div class="rounded-lg bg-white dark:bg-black shadow-md dark:border-gray-600 text-white flex items-center">
-                    <div class="px-5 py-2">£24</div>
-                    <div class="px-5 py-2 bg-blue-600 rounded-r-lg flex items-center">
-                        Buy tickets <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-right"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
-                    </div>
-                </div>
-            </div>
-            <img class="rounded-3xl" src="https://visitbath.co.uk/imageresizer/?image=%2Fdbimgs%2FGallery%20-%20Whats%20On%20-%20Comedy%20-%20Komedia.jpg&action=FeaturedItemsGalleryProElite3x2" alt="">
-        </div>
-        <div class="flex-shrink-0 w-full relative">
-            <div class="flex justify-between absolute w-full px-4 bottom-4">
-                <div class="rounded-lg bg-black px-5 py-2 shadow-md dark:border-gray-600 text-white flex items-center">
-                    <span class="font-semibold mr-4">Bill Bur</span>
-                    <span class="font-light">11 June</span>
-                </div>
-                <div class="rounded-lg bg-white dark:bg-black shadow-md dark:border-gray-600 text-white flex items-center">
-                    <div class="px-5 py-2">£24</div>
-                    <div class="px-5 py-2 bg-blue-600 rounded-r-lg flex items-center">
-                        Buy tickets <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-right"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
-                    </div>
-                </div>
-            </div>
-            <img class="rounded-3xl" src="https://visitbath.co.uk/imageresizer/?image=%2Fdbimgs%2FGallery%20-%20Whats%20On%20-%20Comedy%20-%20Komedia.jpg&action=FeaturedItemsGalleryProElite3x2" alt="">
-        </div>
-        <div class="flex-shrink-0 w-full relative">
-            <div class="flex justify-between absolute w-full px-4 bottom-4">
-                <div class="rounded-lg bg-black px-5 py-2 shadow-md dark:border-gray-600 text-white flex items-center">
-                    <span class="font-semibold mr-4">Bill Bur</span>
-                    <span class="font-light">11 June</span>
-                </div>
-                <div class="rounded-lg bg-white dark:bg-black shadow-md dark:border-gray-600 text-white flex items-center">
-                    <div class="px-5 py-2">£24</div>
-                    <div class="px-5 py-2 bg-blue-600 rounded-r-lg flex items-center">
-                        Buy tickets <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-right"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
-                    </div>
-                </div>
-            </div>
-            <img class="rounded-3xl" src="https://visitbath.co.uk/imageresizer/?image=%2Fdbimgs%2FGallery%20-%20Whats%20On%20-%20Comedy%20-%20Komedia.jpg&action=FeaturedItemsGalleryProElite3x2" alt="">
-        </div>
+        {% endfor %}
     </div>
 </div>
+
 {% endblock %}

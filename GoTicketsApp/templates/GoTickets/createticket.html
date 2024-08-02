@@ -1,0 +1,30 @@
+{% extends 'GoTickets/base/base.html' %}
+
+{% block content %}
+<body>
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+
+        <div style="background-color: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); width: 100%; max-width: 500px;">
+            <h1 style="text-align: center; margin-bottom: 20px;">Create Ticket for {{ event.title }}</h1>
+            <form method="post" style="display: flex; flex-direction: column;">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" style="background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px;">
+                    Submit
+                </button>
+            </form>
+            {% if messages %}
+                <div style="margin-top: 20px;">
+                    <ul style="list-style-type: none; padding: 0;">
+                        {% for message in messages %}
+                            <li style="background-color: #d1ecf1; color: #0c5460; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                                {{ message }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+{% endblock %}

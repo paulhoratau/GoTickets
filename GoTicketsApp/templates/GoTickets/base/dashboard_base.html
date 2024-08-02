@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
     </head>
     <body class="bg-gray-950 relative">
-        <nav class="border-gray-200 dark:border-gray-700 border-b py-2">
+            <nav class="border-gray-200 dark:border-gray-700 border-b py-2">
             <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
             <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
                 <img src="{% static 'gologo.svg' %}" class="h-8" alt="GoTickets Logo" />
@@ -44,10 +44,12 @@
         <nav class="bg-gray-800 border-gray-200 dark:border-gray-700 border-b">
             <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                 <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 dark:border-gray-700">
-                    <li><a href="{% url 'login' %}" class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Account settings</a></li>
-                    <li><a href="{% url 'register' %}" class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">My tickets</a></li>
-                    <li><a href="{% url 'login' %}" class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">My events</a></li>
-                    </ul>
+                    <li><a href="{% url 'account' %}" class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Account settings</a></li>
+                    <li><a href="{% url 'user_tickets' %}" class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">My tickets</a></li>
+                    <li><a href="{% url 'user_events' %}" class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">My events</a></li>
+                    <li><a href="{% url 'eventcreate' %}" class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Create event</a></li>
+                    <li><a href="{% url 'events' %}" class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Events</a></li>
+                </ul>
             </div>
         </nav>
         {% block content %}

@@ -1,0 +1,115 @@
+{% extends 'GoTickets/base/base.html' %}
+
+{% block content %}
+<section class="mx-6 mt-5">
+    <div class="mx-auto max-w-screen-xl gap-5">
+        <div class="w-full mt-10 px-6 py-8 bg-white rounded-lg shadow dark:border dark:bg-gray-900 dark:border-gray-700">
+            <div class="gap-4 sm:flex sm:items-center sm:justify-between">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">My events</h2>
+
+                <div class="mt-6 gap-4 space-y-4 sm:mt-0 sm:flex sm:items-center sm:justify-end sm:space-y-0">
+                    <div>
+                    <label for="order-type" class="sr-only mb-2 block text-sm font-medium text-gray-900 dark:text-white">Select ticket type</label>
+                    <select id="order-type" name="order_type" class="block w-full min-w-[8rem] rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500">
+                        <option value="">All events</option>
+                        <option value="expired">Expired</option>
+                        <option value="upcoming">Upcoming</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    </div>
+
+                    <span class="inline-block text-gray-500 dark:text-gray-400"> from </span>
+
+                    <div>
+                    <label for="duration" class="sr-only mb-2 block text-sm font-medium text-gray-900 dark:text-white">Select duration</label>
+                    <select id="duration" name="duration" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500">
+                        <option value="this_week">this week</option>
+                        <option value="this_month">this month</option>
+                        <option value="last_3_months">the last 3 months</option>
+                        <option value="last_6_months">the last 6 months</option>
+                        <option value="this_year">this year</option>
+                    </select>
+                    </div>
+                </div>
+                </div>
+
+                <div class="mt-6 flow-root sm:mt-8">
+                    <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                        {% for event in page_obj %}
+                        <div class="flex flex-wrap items-center gap-y-4 py-6">
+                            <!-- Event -->
+                            <dl class="w-1/2 sm:w-1/4 lg:w-auto lg:flex-1">
+                                <dt class="text-base font-medium text-gray-500 dark:text-gray-400">Event:</dt>
+                                <dd class="mt-1.5 text-base font-semibold text-gray-900 dark:text-white">
+                                    {{ event.title}}
+                                </dd>
+                            </dl>
+
+                            <!-- Purchase Date -->
+                            <dl class="w-1/2 sm:w-1/4 lg:w-auto lg:flex-1">
+                                <dt class="text-base font-medium text-gray-500 dark:text-gray-400">Date:</dt>
+                                <dd class="mt-1.5 text-base font-semibold text-gray-900 dark:text-white">{{ event.start_date }}</dd>
+                            </dl>
+
+                            <!-- Price -->
+                            <dl class="w-1/2 sm:w-1/4 lg:w-auto lg:flex-1">
+                                <dt class="text-base font-medium text-gray-500 dark:text-gray-400">Price:</dt>
+                                <dd class="mt-1.5 text-base font-semibold text-gray-900 dark:text-white">${{ event.price }}</dd>
+                            </dl>
+
+                            <!-- Action Buttons -->
+                            <div class="w-full grid sm:grid-cols-2 lg:flex lg:w-64 lg:items-center lg:justify-end gap-4">
+                                <a href="{% url 'event_by_id' event.id %}" class="w-full inline-flex justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 lg:w-auto">
+                                    View event
+                                </a>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-center text-gray-500 dark:text-gray-400">You have no events.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Pagination Controls -->
+                <nav class="mt-6 flex items-center justify-center sm:mt-8" aria-label="Page navigation example">
+                    <ul class="flex h-8 items-center -space-x-px text-sm">
+                        {% if page_obj.has_previous %}
+                        <li>
+                            <a href="?page={{ page_obj.previous_page_number }}" class="ms-0 flex h-8 items-center justify-center rounded-s-lg border border-e-0 border-gray-300 bg-white px-3 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                <span class="sr-only">Previous</span>
+                                <svg class="h-4 w-4 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7" />
+                                </svg>
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                            <li>
+                                <a href="?page={{ num }}" aria-current="page" class="z-10 flex h-8 items-center justify-center border border-primary-300 bg-primary-50 px-3 leading-tight text-primary-600 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">{{ num }}</a>
+                            </li>
+                            {% else %}
+                            <li>
+                                <a href="?page={{ num }}" class="flex h-8 items-center justify-center border border-gray-300 bg-white px-3 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ num }}</a>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                        <li>
+                            <a href="?page={{ page_obj.next_page_number }}" class="flex h-8 items-center justify-center rounded-e-lg border border-gray-300 bg-white px-3 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                <span class="sr-only">Next</span>
+                                <svg class="h-4 w-4 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7" />
+                                </svg>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+        </div>
+    </div>
+</section>
+{% endblock %}
