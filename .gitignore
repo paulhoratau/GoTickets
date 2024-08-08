@@ -9,3 +9,4 @@ node_modules/
 
 # Ignore all .env files
 .env
+goticketsenv

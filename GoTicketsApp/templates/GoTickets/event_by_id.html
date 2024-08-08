@@ -1,11 +1,14 @@
 {% extends 'GoTickets/base/base.html' %}
 
 {% block content %}
+
 <div class="max-w-screen-xl mx-auto text-gray-400 pb-20 mt-20 px-10">
+
     {% if event.image %}
 
     <div class="w-full rounded-xl block h-[350px]" style="background: url('{{ event.image.url }}') no-repeat center center; background-size: cover;"></div>
     {% endif %}
+
     <h1 class="text-5xl flex items-center text-white tracking-wide mb-10 font-extrabold mt-10">{{event.title}}</h1>
     <div class="flex flex-col lg:flex-row">
         <div class="w-full lg:w-1/2">
@@ -30,42 +33,50 @@
                     <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                         Buy tickets
                     </h1>
-                        <form class="space-y-4 md:space-y-6" method="post">
-                            {% csrf_token %}
+                    <form class="space-y-4 md:space-y-6" method="post">
+                        {% csrf_token %}
+
+                        <!-- Check if there are any tickets available -->
+                        {% if remaining_seats > 0 %}
                             {% if tickets|length == 0 %}
                                 <div class="flex items-start border-t border-gray-200 dark:border-gray-700 pt-5">
                                     <div class="w-full pr-0 md:pr-10">
-                                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                             1-Day Ticket - 15 $
                                         </label>
                                         <p class="text-sm">Gives you exclusive access to the event on Friday.</p>
                                     </div>
                                     <div class="w-full md:w-32 flex-shrink-0">
-                                        <label for="number_of_tickets" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Number of tickets</label>
-                                        <input type="number" id="quantity" name="quantity" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0" required />
+                                        <label for="quantity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Number of tickets</label>
+                                        <input type="number" id="quantity" name="quantity" min="1" max="{{ remaining_seats }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0" required />
                                     </div>
                                 </div>
-                                {% else %}
+                            {% else %}
                                 {% for ticket in tickets %}
-                                <div class="flex items-start border-t border-gray-200 dark:border-gray-700 pt-5">
-                                    <div class="w-full pr-0 md:pr-10">
-                                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            1-Day Ticket Friday - {{ ticket.price }} $
-                                        </label>
-                                        <p class="text-sm">{{ ticket.description }}</p>
+                                    <div class="flex items-start border-t border-gray-200 dark:border-gray-700 pt-5">
+                                        <div class="w-full pr-0 md:pr-10">
+                                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                1-Day Ticket Friday - {{ ticket.price }} $
+                                            </label>
+                                            <p class="text-sm">{{ ticket.description }}</p>
+                                        </div>
+                                        <div class="w-full md:w-32 flex-shrink-0">
+                                            <label for="quantity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Number of tickets</label>
+                                            <input type="number" id="quantity" name="quantity" min="1" max="{{ remaining_seats }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0" required />
+                                        </div>
                                     </div>
-                                    <div class="w-full md:w-32 flex-shrink-0">
-                                        <label for="number_of_tickets" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Number of tickets</label>
-                                        <input type="number" id="quantity" name="quantity" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0" required />
-                                    </div>
-                                </div>
                                 {% endfor %}
                             {% endif %}
                             <button type="submit" class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Go to checkout</button>
-                            <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-                                *The organiser doesn't accept refunds.
-                            </p>
-                        </form>
+                        {% else %}
+                            <p class="sold-out">Sold Out</p>
+                        {% endif %}
+
+                        <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                            *The organizer doesn't accept refunds.
+                        </p>
+                    </form>
+
                 </div>
             </div>
         </div>
@@ -97,6 +108,13 @@
         </div>
         <p class="leading-normal text-lg mt-10">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minima vitae, dignissimos explicabo nulla, dolore, doloremque aperiam necessitatibus assumenda nobis excepturi suscipit? Aspernatur quis deserunt distinctio! Voluptatum nostrum impedit, cum repudiandae omnis rem, voluptates laboriosam culpa obcaecati in blanditiis tenetur nesciunt architecto mollitia. Nam nihil vero fuga ex corporis eos ea!</p>
     </div>
+    {% if is_organizer %}
+    <button type="button" onclick="location.href='{% url 'event_manage' event.id %}'" class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+        Edit event
+    </button>
+    {% endif %}
+
 </div>
+
 
 {% endblock %}

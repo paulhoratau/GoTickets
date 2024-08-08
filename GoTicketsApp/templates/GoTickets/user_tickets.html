@@ -1,4 +1,4 @@
-{% extends 'GoTickets/base/base.html' %}
+{% extends 'GoTickets/base/dashboard_base.html' %}
 
 
 {% block content %}
@@ -88,6 +88,7 @@
                 </div>
 
                 <!-- Pagination Controls -->
+                {% if page_obj.paginator.num_pages > 1 %}
                 <nav class="mt-6 flex items-center justify-center sm:mt-8" aria-label="Page navigation example">
                     <ul class="flex h-8 items-center -space-x-px text-sm">
                         {% if page_obj.has_previous %}
@@ -125,6 +126,7 @@
                         {% endif %}
                     </ul>
                 </nav>
+                {% endif %}
         </div>
     </div>
 </section>

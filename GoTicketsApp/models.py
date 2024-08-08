@@ -5,6 +5,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.validators import MinValueValidator
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -51,7 +54,7 @@ class Event(models.Model):
         default='Stand-up Comedy',
     )
     title = models.CharField(max_length=80)
-    organizer = models.ForeignKey(User, null=True, blank = True, on_delete=models.CASCADE, related_name= 'organizer' )
+    organizer = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, related_name='organizer')
     description = models.TextField()
     location_country = models.CharField(max_length=30)
     address = models.CharField(max_length=60)
@@ -61,6 +64,21 @@ class Event(models.Model):
     image = models.ImageField(upload_to='images/')
     price = models.DecimalField(max_digits=6, decimal_places=2)
     seats = models.DecimalField(max_digits=6, decimal_places=0)
+
+    def clean(self):
+        # Call the parent clean method to perform the default validation
+        super().clean()
+
+        # Check if start_date is greater than end_date
+        if self.start_date > self.end_date:
+            raise ValidationError({
+                'start_date': _('Start date cannot be after end date.'),
+                'end_date': _('End date cannot be before start date.')
+            })
+
+    def __str__(self):
+        return self.title
+
 
 
 class Ticket(models.Model):
@@ -76,7 +94,7 @@ class Ticket(models.Model):
 class Purchase(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=1)
+    quantity = models.IntegerField(default=1, validators=[MinValueValidator(1)])
     purchase_date = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False)
 
@@ -85,4 +103,3 @@ class Card(models.Model):
     date = models.CharField(max_length=5)
     cvv = models.CharField(max_length=3)
     full_name = models.CharField(max_length=30)
- 

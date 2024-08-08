@@ -14,7 +14,7 @@ urlpatterns = [
 
     path('event/create/', views.eventcreate, name='eventcreate'),
     path('events/', views.events, name='events'),
-    path('event/<int:id>/', views.events_by_id, name="event_by_id"),
+    path('event/<int:id>', views.event_by_id, name="event_by_id"),
     path('event/<int:id>/manage/', views.event_manage, name="event_manage"),
     path('event/<int:id>/ticket_detailed/', views.ticket_detailed, name='ticket_detailed'),
     path('event/<int:event_id>/qr/', views.generate_ticket_qr, name='event_qr'),
@@ -27,6 +27,7 @@ urlpatterns = [
 
     path('account/', views.account, name="account"),
     path('account/user_events', views.user_events, name="user_events"),
+    path('account/user_events/<str:order_type>/', views.user_events, name='user_events_filtered'),
     path('account/user_tickets/', views.user_tickets, name="user_tickets"),
     path('account/update_account_settings/', views.update_account_settings, name='update_account_settings'),
     path('account/change_password/', views.change_password, name='change_password'),
